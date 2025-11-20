@@ -96,6 +96,38 @@ body.theme-dark .button.secondary {
   font-size: 0.85rem;
 }
 
+/* --- Hero photo badge (rectangular, no crop) --- */
+.hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.hero-photo {
+  width: 92px;             /* good size */
+  height: 112px;           /* maintains portrait look */
+  object-fit: cover;       /* keeps proportions but trims background excess */
+  border-radius: 6px;      /* slight curve, not circular */
+  border: 2px solid rgba(0,0,0,0.12);
+}
+
+body.theme-dark .hero-photo {
+  border: 2px solid rgba(255,255,255,0.14);
+}
+
+/* Text stays aligned */
+.hero-text {
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .hero-text { text-align: center; }
+  .hero-inner { flex-direction: column; }
+}
+
+
 /* SECTION TITLE */
 .section-title {
   font-family: "Inter", ui-sans-serif;
