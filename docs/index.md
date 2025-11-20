@@ -42,7 +42,9 @@ I specialize in:
 ## 🤝 Let’s Work Together <a id="contact"></a>
 
 Have an idea or need a custom AI tool?  
-📩 **Reach me at:** `veydaszn@gmail.com`  
+📩 **Reach me at:** `veydaszn@gmail.com`
+@veydaszn - All Platforms
+**WhatsApp me:** +254108304306
 or DM me on GitHub.
 
 ---
