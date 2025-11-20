@@ -1,0 +1,7 @@
+title: "Veyda"
+description: "Full-Stack AI Developer • Prototypes & Automation"
+baseurl: "/veyda"
+url: "https://veydaszn.github.io"
+
+theme: jekyll-theme-minimal
+markdown: kramdown
