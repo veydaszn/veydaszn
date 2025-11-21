@@ -1,18 +1,17 @@
 title: "Veyda"
 description: "Full-Stack AI Developer • Prototypes & Automation"
-baseurl: "/veydaszn"     # adjust if your site base differs; for user repo pages you can set to "/veydaszn"
+baseurl: "/veydaszn"
 url: "https://veydaszn.github.io"
 
 theme: jekyll-theme-minimal
 markdown: kramdown
 
-# === Pinned repos (edit these to control which repos show in console) ===
-# format: "owner/repo"
+# Pinned repos: list repos you want shown in the console (format "owner/repo")
 pinned_repos:
   - "veydaszn/draftfodge"
   - "veydaszn/semstack"
   - "veydaszn/topicnest"
-  # add or remove items here
 
-# Optional: contact email used in templates
+# Contact used by templates
 contact_email: "veydaszn@gmail.com"
+contact_whatsapp: "+254108304306"
