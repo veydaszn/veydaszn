@@ -1,6 +1,6 @@
 title: "Veyda"
 description: "Full-Stack AI Developer • Prototypes & Automation"
-baseurl: "veydaszn"     # adjust if your site base differs; for user repo pages you can set to "/veydaszn"
+baseurl: "/veydaszn"     # adjust if your site base differs; for user repo pages you can set to "/veydaszn"
 url: "https://veydaszn.github.io"
 
 theme: jekyll-theme-minimal
