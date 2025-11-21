@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ page.title | default: "Home" }} | {{ site.title }}</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title | default: "Home" }} · {{ site.title }}</title>
   {% if site.description %}
-    <meta name="description" content="{{ site.description }}"/>
+  <meta name="description" content="{{ site.description }}" />
   {% endif %}
 
-  <link rel="stylesheet" href="{{ '/assets/css/style.scss' | relative_url }}" />
-
-  <!-- Minimal inline style for the dark toggle button layout (keeps layout stable before CSS loads) -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
   <style>
-    .dm-toggle { position: fixed; top: 18px; right: 18px; z-index: 999; }
+    /* Inline minimal to avoid FOUC for toggle button placement */
+    .dm-toggle { position: fixed; top: 14px; right: 14px; z-index: 1200; }
   </style>
 </head>
 <body class="theme-light">
 
-  <!-- Dark mode toggle -->
+  <!-- Dark-mode toggle -->
   <div class="dm-toggle">
-    <button id="dmBtn" aria-label="Toggle dark mode">🌙</button>
+    <button id="dmBtn" class="dm-btn" aria-label="Toggle dark mode">🌙</button>
   </div>
 
   <header class="hero">
-  <div class="hero-inner">
-    <img src="{{ '/assets/img/portrait.jpg' | relative_url }}" alt="Profile photo" class="hero-photo">
-
-    <div class="hero-text">
-      <h1>{{ site.title }}</h1>
-      <p>{{ site.description }}</p>
+    <div class="hero-inner container">
+      <img src="{{ '/assets/img/passport.jpg' | relative_url }}" alt="Profile photo" class="hero-photo">
+      <div class="hero-text">
+        <h1>{{ site.title }}</h1>
+        <p class="lead">{{ site.description }}</p>
+        <div class="hero-cta">
+          <a href="#projects" class="button">Projects</a>
+          <a href="#contact" class="button secondary">Contact</a>
+        </div>
+      </div>
     </div>
-  </div>
-
   </header>
 
   <main class="container">
     {{ content }}
 
-    <!-- Hacker Console Section -->
+    <!-- Hacker Console -->
     <section id="projects" class="console-section">
       <h2 class="section-title">📡 Hacker Console — pinned repos</h2>
       <div id="console" class="console" role="log" aria-live="polite">
-        <div class="console-line">$ booting console...</div>
+        <div class="console-line muted">$ initializing console...</div>
       </div>
       <div class="console-controls">
         <button id="refreshBtn" class="button tiny">Refresh</button>
@@ -50,160 +50,133 @@
       </div>
     </section>
 
-    <!-- Contact -->
+    <!-- Contact quick -->
     <section id="contact" class="contact">
       <h2>🤝 Let's connect</h2>
-      <p>If you want to work together or test a prototype, reach out: <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-      <p>Or find me on <a href="https://github.com/{{ site.github.repository_owner }}" target="_blank" rel="noopener">GitHub</a>.</p>
+      <p>Want to work together or test a prototype? Reach out:</p>
+      <ul>
+        <li>Email: <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></li>
+        <li>WhatsApp: <a href="https://wa.me/{{ site.contact_whatsapp | remove: '+' }}">{{ site.contact_whatsapp }}</a></li>
+        <li>GitHub: <a href="https://github.com/{{ site.github.repository_owner }}">{{ site.github.repository_owner }}</a></li>
+      </ul>
     </section>
   </main>
 
-  <footer class="footer">
-    © {{ site.time | date: "%Y" }} {{ site.title }} • Built with ❤️
+  <footer class="footer container">
+    <p>Whatsapp me: <strong>{{ site.contact_whatsapp }}</strong> or DM me @ <strong>{{ site.contact_email }}</strong>, and all platforms</p>
+    <p class="muted">© {{ site.time | date: "%Y" }} {{ site.title }} • Built with ❤️</p>
   </footer>
 
-  <!-- ====== Scripts ====== -->
+  <!-- ===== Scripts (dark toggle + console fetch) ===== -->
   <script>
-    /* -------------------------
-       Dark Mode Toggle
-       - Saves preference in localStorage under "veyda_theme"
-       - theme classes: theme-light | theme-dark
-    --------------------------*/
-    (function () {
-      const THEME_KEY = 'veyda_theme';
-      const root = document.documentElement || document.body;
-      const btn = document.getElementById('dmBtn');
+  // Dark Mode toggle (saves to localStorage "veyda_theme")
+  (function () {
+    const THEME_KEY = 'veyda_theme';
+    const btn = document.getElementById('dmBtn');
 
-      function applyTheme(theme) {
-        if (theme === 'dark') {
-          document.body.classList.remove('theme-light');
-          document.body.classList.add('theme-dark');
-          btn.textContent = '☀️';
-        } else {
-          document.body.classList.remove('theme-dark');
-          document.body.classList.add('theme-light');
-          btn.textContent = '🌙';
-        }
-      }
-
-      // initialize from localStorage or system preference
-      const saved = localStorage.getItem(THEME_KEY);
-      if (saved) {
-        applyTheme(saved);
+    function applyTheme(t) {
+      if (t === 'dark') {
+        document.body.classList.remove('theme-light');
+        document.body.classList.add('theme-dark');
+        btn.textContent = '☀️';
       } else {
-        // prefer dark for Midnight Minimal
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(prefersDark ? 'dark' : 'light');
+        document.body.classList.remove('theme-dark');
+        document.body.classList.add('theme-light');
+        btn.textContent = '🌙';
       }
+    }
 
-      btn.addEventListener('click', () => {
-        const current = document.body.classList.contains('theme-dark') ? 'dark' : 'light';
-        const next = current === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(THEME_KEY, next);
-        applyTheme(next);
-      });
-    })();
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) applyTheme(saved);
+    else {
+      // prefer dark for Midnight Minimal
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(prefersDark ? 'dark' : 'light');
+    }
+
+    btn.addEventListener('click', function () {
+      const current = document.body.classList.contains('theme-dark') ? 'dark' : 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
+  })();
   </script>
 
   <script>
-    /* -------------------------
-       Hacker Console: Fetch pinned repos from GitHub REST API
-       - Uses 'pinned_repos' from _config.yml, rendered into the page as data-attribute
-       - Fetches details from api.github.com/repos/<owner>/<repo>
-       - Renders a styled "console" output
-    --------------------------*/
+  // Hacker Console: fetch pinned repos listed in _config.yml (rendered as JS array)
+  (function () {
+    const consoleEl = document.getElementById('console');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const rateHint = document.getElementById('rateHint');
 
-    (function () {
-      const consoleEl = document.getElementById('console');
-      const refreshBtn = document.getElementById('refreshBtn');
-      const rateHint = document.getElementById('rateHint');
+    const pinned = [
+      {% for item in site.pinned_repos %}
+      "{{ item }}",
+      {% endfor %}
+    ].filter(Boolean);
 
-      // Render the pinned list from Jekyll config
-      const pinned = [
-        {% for item in site.pinned_repos %}
-        "{{ item }}",
-        {% endfor %}
-      ].filter(Boolean);
+    function appendLine(text, cls) {
+      const d = document.createElement('div');
+      d.className = 'console-line' + (cls ? ' ' + cls : '');
+      d.textContent = text;
+      consoleEl.appendChild(d);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
 
-      // Utility: append line to console
-      function appendLine(text, cls) {
-        const div = document.createElement('div');
-        div.className = 'console-line' + (cls ? ' ' + cls : '');
-        div.textContent = text;
-        consoleEl.appendChild(div);
-        // auto-scroll
-        consoleEl.scrollTop = consoleEl.scrollHeight;
+    async function fetchRate() {
+      try {
+        const r = await fetch('https://api.github.com/rate_limit');
+        if (!r.ok) return null;
+        return r.json();
+      } catch (e) { return null; }
+    }
+
+    async function fetchRepo(slug) {
+      const r = await fetch(`https://api.github.com/repos/${slug}`);
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+      return r.json();
+    }
+
+    function formatRepoLine(repo) {
+      const name = repo.full_name.split('/')[1];
+      const stars = repo.stargazers_count || 0;
+      const lang = repo.language || '—';
+      return `$ repo: ${name} — ${repo.description ? repo.description : 'No description'} | ★ ${stars} | ${lang} | ${repo.html_url}`;
+    }
+
+    async function loadPinned() {
+      consoleEl.innerHTML = '';
+      appendLine('$ starting fetch for pinned repos...', 'muted');
+      if (!pinned.length) {
+        appendLine('$ no pinned repos configured. Edit _config.yml > pinned_repos', 'error');
+        return;
       }
 
-      // Get rate limit info
-      async function fetchRateLimit() {
+      const rl = await fetchRate();
+      if (rl && rl.resources && rl.resources.core) {
+        rateHint.textContent = `GitHub API remaining requests: ${rl.resources.core.remaining}`;
+      } else {
+        rateHint.textContent = '';
+      }
+
+      for (let i = 0; i < pinned.length; i++) {
+        const slug = pinned[i];
+        appendLine(`$ [${i+1}/${pinned.length}] fetching ${slug} ...`, 'info');
         try {
-          const res = await fetch('https://api.github.com/rate_limit');
-          if (!res.ok) return null;
-          return res.json();
-        } catch (e) {
-          return null;
+          const repo = await fetchRepo(slug);
+          appendLine(formatRepoLine(repo), 'repo');
+          await new Promise(r => setTimeout(r, 420));
+        } catch (err) {
+          appendLine(`$ ERROR fetching ${slug}: ${err.message}`, 'error');
         }
       }
+      appendLine('$ done.', 'done');
+    }
 
-      // Fetch single repo data
-      async function fetchRepo(fullName) {
-        const url = `https://api.github.com/repos/${fullName}`;
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error(`${resp.status} ${resp.statusText}`);
-        return resp.json();
-      }
-
-      // Render a repo card line in console style
-      function renderRepoLine(repo) {
-        // Example formatted line:
-        // $ repo: draftfodge — AI writing tool | ★ 12 | JS | https://github.com/...
-        const name = repo.full_name.split('/')[1];
-        const stars = repo.stargazers_count || 0;
-        const lang = repo.language || '—';
-        return `$ repo: ${name} — ${repo.description ? repo.description : 'No description'} | ★ ${stars} | ${lang} | ${repo.html_url}`;
-      }
-
-      // Main: fetch all pinned repos sequentially (to be gentle on rate limits)
-      async function loadPinned() {
-        consoleEl.innerHTML = ''; // clear
-        appendLine('$ initializing fetch for pinned repos...', 'muted');
-        if (!pinned.length) {
-          appendLine('$ no pinned repos configured. Edit _config.yml > pinned_repos', 'error');
-          return;
-        }
-
-        // show rate limit if available
-        const rl = await fetchRateLimit();
-        if (rl && rl.resources && rl.resources.core) {
-          const remaining = rl.resources.core.remaining;
-          rateHint.textContent = `GitHub API remaining requests: ${remaining}`;
-        } else {
-          rateHint.textContent = '';
-        }
-
-        for (let i = 0; i < pinned.length; i++) {
-          const slug = pinned[i];
-          appendLine(`$ [${i+1}/${pinned.length}] fetching ${slug} ...`, 'info');
-          try {
-            const repo = await fetchRepo(slug);
-            appendLine(renderRepoLine(repo), 'repo');
-            // small delay between calls to reduce burst
-            await new Promise(r => setTimeout(r, 400));
-          } catch (err) {
-            appendLine(`$ ERROR fetching ${slug}: ${err.message}`, 'error');
-          }
-        }
-        appendLine('$ done.', 'done');
-      }
-
-      refreshBtn.addEventListener('click', () => {
-        loadPinned();
-      });
-
-      // initial load
-      loadPinned();
-    })();
+    refreshBtn.addEventListener('click', loadPinned);
+    loadPinned();
+  })();
   </script>
 
 </body>
